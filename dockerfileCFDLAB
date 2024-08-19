@@ -1,0 +1,84 @@
+FROM ubuntu:22.04
+
+# GNU compiler
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    g++ \
+    gcc \
+    gfortran && \
+    rm -rf /var/lib/apt/lists/*
+
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    autoconf \
+    autoconf-archive \
+    automake \
+    bzip2 \
+    ca-certificates \
+    cmake \
+    git \
+    gzip \
+    libtool \
+    make \
+    patch \
+    xz-utils && \
+    rm -rf /var/lib/apt/lists/*
+
+# CUDA
+RUN apt-get update -y && apt-get install wget
+
+RUN wget https://developer.download.nvidia.com/compute/cuda/repos/ubuntu2204/x86_64/cuda-ubuntu2204.pin && \
+    mv cuda-ubuntu2204.pin /etc/apt/preferences.d/cuda-repository-pin-600 && \
+    wget --continue --progress=dot:mega --tries=0 https://developer.download.nvidia.com/compute/cuda/12.4.0/local_installers/cuda-repo-ubuntu2204-12-4-local_12.4.0-550.54.14-1_amd64.deb && \
+    dpkg -i cuda-repo-ubuntu2204-12-4-local_12.4.0-550.54.14-1_amd64.deb && \
+    cp /var/cuda-repo-ubuntu2204-12-4-local/cuda-*-keyring.gpg /usr/share/keyrings/ && \
+    apt-get update && \
+    apt-get -y install cuda-toolkit-12-4
+
+ENV PATH=/usr/local/cuda-12.4/bin:$PATH \
+    LD_LIBRARY_PATH=/usr/local/cuda-12.4/lib64/:$LD_LIBRARY_PATH
+
+RUN apt-get update -y && \
+    DEBIAN_FRONTEND=noninteractive apt-get install -y --no-install-recommends \
+    bzip2 \
+    file \
+    hwloc \
+    libnuma-dev \
+    make \
+    openssh-client \
+    perl \
+    tar \
+    curl \
+    unzip \
+    libvtk7-qt-dev &&\
+    rm -rf /var/lib/apt/lists/*
+
+RUN mkdir -p /var/tmp && wget -q -nc --no-check-certificate -P /var/tmp https://www.open-mpi.org/software/ompi/v4.0/downloads/openmpi-4.0.5.tar.bz2 && \
+    mkdir -p /var/tmp && tar -x -f /var/tmp/openmpi-4.0.5.tar.bz2 -C /var/tmp -j && \
+    cd /var/tmp/openmpi-4.0.5 &&   ./configure --prefix=/usr/local/openmpi --disable-getpwuid --enable-orterun-prefix-by-default --with-cuda=/usr/local/cuda-12.4 && \
+    make -j$(nproc) && \
+    make -j$(nproc) install && \
+    rm -rf /var/tmp/openmpi-4.0.5 /var/tmp/openmpi-4.0.5.tar.bz2
+ENV LD_LIBRARY_PATH=/usr/local/openmpi/lib:$LD_LIBRARY_PATH \
+    PATH=/usr/local/openmpi/bin:$PATH
+
+ENV OMPI_ALLOW_RUN_AS_ROOT=1
+ENV OMPI_ALLOW_RUN_AS_ROOT_CONFIRM=1
+ENV CXX=mpic++
+ENV CC=mpicc
+
+#neovim
+RUN curl -LO https://github.com/neovim/neovim/releases/latest/download/nvim-linux64.tar.gz && \
+    rm -rf /opt/nvim && \
+    tar -C /opt -xzf nvim-linux64.tar.gz 
+
+ENV PATH=/opt/nvim-linux64/bin:$PATH
+#RUN apt-get update && apt-get install -y neovim 
+
+ADD repo-key /
+RUN \ 
+  chmod 600 /repo-key && \  
+  echo "IdentityFile /repo-key" >> /etc/ssh/ssh_config && \  
+  echo "StrictHostKeyChecking no" >> /etc/ssh/ssh_config && \
+  git clone ssh://git@github.com/gaurav44/nvim.git
+

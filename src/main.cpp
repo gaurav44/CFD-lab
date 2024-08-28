@@ -17,21 +17,6 @@ date file is provided.
 int main(int argn, char **args) {
     const size_t N = 100;
     
-    // Create a ThrustVector with N elements
-    ThrustVector tvec(N);
-
-    // Fill the vector with the value 1.0f
-    tvec.fill(1.0f);
-
-    // Copy the data back to host
-    std::vector<float> host_data = tvec.copyToHost();
-
-    // Display the first 10 elements
-    for (size_t i = 0; i < 10; ++i) {
-        std::cout << host_data[i] << " ";
-    }
-    std::cout << std::endl;
-  /* thrust::device_vector<int> d_vec(5); */
   /* Communication::init_parallel(argn, args); */
   /* if (argn > 1) { */
   /*   std::string file_name{args[1]}; */

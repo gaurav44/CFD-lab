@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="466" height="492" src="videos/droplet.gif">
+  <img width="800" height="492" src="videos/droplet.gif">
 </div>
 
 Fluidchen is a CFD Solver developed for the CFD Lab taught at TUM Informatics, Chair of Scientific Computing in Computer Science. 
@@ -88,10 +88,10 @@ In the terminal window, we also output, `Timestep`, `Time`,`Residual`, and `Pres
 
 ### Sample Outputs
 <div align="center">
-  <img width="466" height="492" src="videos/dam_break_with_obstacle.gif">
+  <img width="800" height="492" src="videos/dam_break_with_obstacle.gif">
 </div>
 
 <div align="center">
-  <img width="466" height="492" src="videos/tank_with_baffles.gif">
+  <img width="800" height="492" src="videos/tank_with_baffles.gif">
 </div>
 

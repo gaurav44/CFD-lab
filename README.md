@@ -1,5 +1,5 @@
 <div align="center">
-  <img width="466" height="492" src="FluidchenLogo.png">
+  <img width="466" height="492" src="videos/droplet.gif">
 </div>
 
 Fluidchen is a CFD Solver developed for the CFD Lab taught at TUM Informatics, Chair of Scientific Computing in Computer Science. 
@@ -41,8 +41,8 @@ The input data is fed to the solver in a .dat file by the user. In addition to t
 ## Building the code
 
 ```shell
-git clone https://gitlab.lrz.de/oguzziya/GroupX_CFDLab.git
-cd GroupX_CFDLab
+git clone https://github.com/gaurav44/CFD-lab.git
+cd CFD-lab
 mkdir build && cd build
 cmake ..
 make
@@ -85,4 +85,13 @@ If the input file does not contain a geometry file (added later in the course), 
 ## Output
 
 In the terminal window, we also output, `Timestep`, `Time`,`Residual`, and `Pressure Poisson Interpretation`. Until convergence, we also output error message. In case of Free surface flow, two files are generated for visualization `.vtk` and a `.vtp`, this will be read by Particle Reader in **Paraview**.
+
+### Sample Outputs
+<div align="center">
+  <img width="466" height="492" src="videos/dam_break_with_obstacle.gif">
+</div>
+
+<div align="center">
+  <img width="466" height="492" src="videos/tank_with_baffles.gif">
+</div>
 
